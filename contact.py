@@ -8,7 +8,6 @@ class Contact:
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
 
-
 # Load contacts
 contacts = []
 
@@ -113,3 +112,4 @@ while True:
     else:
 
         print("Invalid Choice\n")
+
