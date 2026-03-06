@@ -7,7 +7,6 @@ This project represents a new challenge since you'll be asking for a variety of 
 Skills Tested<br>
 You'll work to become comfortable with classes, lists, strings, and functions in Python to create a contacts list. The code will contain plenty of "if" and "else" statements, which can get tricky to track but are well worth the effort.<br>
 
-
 # Features:
 <br>
 Add new contacts with name and phone number
