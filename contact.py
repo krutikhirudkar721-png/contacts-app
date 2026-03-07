@@ -1,5 +1,4 @@
 import json
-
 class Contact:
     def __init__(self, name, phone):
         self.name = name
@@ -10,7 +9,6 @@ class Contact:
 
 # Load contacts
 contacts = []
-
 try:
     with open("contacts.json", "r") as file:
         data = json.load(file)
@@ -112,4 +110,5 @@ while True:
     else:
 
         print("Invalid Choice\n")
+
 
