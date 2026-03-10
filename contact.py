@@ -5,7 +5,7 @@ class Contact:
         self.phone = phone
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
-
+        
 # Load contacts
 contacts = []
 try:
@@ -15,21 +15,16 @@ try:
             contacts.append(Contact(item["name"], item["phone"]))
 except:
     pass
-
-
 def save_contacts():
     with open("contacts.json", "w") as file:
         json.dump([contact.to_dict() for contact in contacts], file)
-
-
+        
 def add_contact():
     name = input("Enter Name: ")
     phone = input("Enter Phone: ")
-
     new_contact = Contact(name, phone)
     contacts.append(new_contact)
     save_contacts()
-
     print("Contact Added Successfully!\n")
 
 
@@ -45,40 +40,34 @@ def view_contacts():
 
 def search_contact():
     name = input("Enter name to search: ")
-
     for contact in contacts:
         if contact.name.lower() == name.lower():
             print("Name:", contact.name)
             print("Phone:", contact.phone)
             print("-" * 20)
             return
-
     print("Contact not found.\n")
 
 
 def delete_contact():
     name = input("Enter name to delete: ")
-
     for contact in contacts:
         if contact.name.lower() == name.lower():
             contacts.remove(contact)
             save_contacts()
             print("Contact deleted successfully!\n")
             return
-
     print("Contact not found.\n")
 
 
 def update_contact():
     name = input("Enter name to update: ")
-
     for contact in contacts:
         if contact.name.lower() == name.lower():
             contact.phone = input("Enter new phone number: ")
             save_contacts()
             print("Contact updated successfully!\n")
             return
-
     print("Contact not found.\n")
 
 
@@ -90,7 +79,6 @@ while True:
     print("4. Delete Contact")
     print("5. Update Contact")
     print("6. Exit")
-
     choice = input("Enter choice: ")
 
     if choice == "1":
@@ -107,8 +95,8 @@ while True:
         print("Program Closed")
         break
     else:
-
         print("Invalid Choice\n")
+
 
 
 
