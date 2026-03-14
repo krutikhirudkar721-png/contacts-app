@@ -5,7 +5,8 @@ class Contact:
         self.phone = phone
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
-        
+
+
 # Load contacts
 contacts = []
 try:
