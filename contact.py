@@ -1,6 +1,5 @@
 import json
 import os
-
 # ---------- Contact Class ----------
 class Contact:
     def __init__(self, name, phone):
