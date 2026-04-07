@@ -9,7 +9,6 @@ class Contact:
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
 
-
 # ---------- Load Contacts ----------
 contacts = []
 
