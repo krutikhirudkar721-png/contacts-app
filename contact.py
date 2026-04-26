@@ -1,5 +1,8 @@
 import json
 import os
+import tkinter as tk
+from tkinter import messagebox
+
 # ---------- Contact Class ----------
 class Contact:
     def __init__(self, name, phone):
@@ -9,7 +12,8 @@ class Contact:
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
 
-# ---------- Load Contacts ----------
+
+# ---------- Data Handling ----------
 contacts = []
 
 def load_contacts():
@@ -18,13 +22,10 @@ def load_contacts():
         try:
             with open("contacts.json", "r") as file:
                 data = json.load(file)
-                contacts = [Contact(item["name"], item["phone"]) for item in data]
-        except json.JSONDecodeError:
-            print("Error: File is corrupted. Starting fresh.")
+                contacts = [Contact(i["name"], i["phone"]) for i in data]
+        except:
             contacts = []
 
-
-# ---------- Save Contacts ----------
 def save_contacts():
     with open("contacts.json", "w") as file:
         json.dump([c.to_dict() for c in contacts], file, indent=4)
@@ -34,119 +35,113 @@ def save_contacts():
 def is_valid_phone(phone):
     return phone.isdigit() and len(phone) >= 10
 
-
 def contact_exists(name):
     return any(c.name.lower() == name.lower() for c in contacts)
 
 
-# ---------- CRUD Operations ----------
+# ---------- Functions ----------
 def add_contact():
-    name = input("Enter Name: ").strip()
-    phone = input("Enter Phone: ").strip()
+    name = name_entry.get()
+    phone = phone_entry.get()
 
     if not name:
-        print("Name cannot be empty.\n")
+        messagebox.showerror("Error", "Name cannot be empty")
         return
 
     if not is_valid_phone(phone):
-        print("Invalid phone number.\n")
+        messagebox.showerror("Error", "Invalid phone number")
         return
 
     if contact_exists(name):
-        print("Contact already exists.\n")
+        messagebox.showerror("Error", "Contact already exists")
         return
 
     contacts.append(Contact(name, phone))
     save_contacts()
-    print("Contact added successfully!\n")
-
+    update_listbox()
+    clear_fields()
+    messagebox.showinfo("Success", "Contact Added")
 
 def view_contacts():
-    if not contacts:
-        print("No contacts found.\n")
-        return
-
-    print("\n--- Contact List ---")
-    for i, c in enumerate(contacts, start=1):
-        print(f"{i}. {c.name} - {c.phone}")
-    print()
-
+    update_listbox()
 
 def search_contact():
-    name = input("Enter name to search: ").strip()
+    name = name_entry.get()
+    listbox.delete(0, tk.END)
 
     for c in contacts:
         if c.name.lower() == name.lower():
-            print(f"Found: {c.name} - {c.phone}\n")
+            listbox.insert(tk.END, f"{c.name} - {c.phone}")
             return
 
-    print("Contact not found.\n")
-
+    messagebox.showinfo("Result", "Contact not found")
 
 def delete_contact():
-    name = input("Enter name to delete: ").strip()
+    selected = listbox.curselection()
+    if not selected:
+        messagebox.showerror("Error", "Select a contact")
+        return
 
-    for c in contacts:
-        if c.name.lower() == name.lower():
-            contacts.remove(c)
-            save_contacts()
-            print("Contact deleted successfully!\n")
-            return
-
-    print("Contact not found.\n")
-
+    index = selected[0]
+    del contacts[index]
+    save_contacts()
+    update_listbox()
 
 def update_contact():
-    name = input("Enter name to update: ").strip()
+    selected = listbox.curselection()
+    if not selected:
+        messagebox.showerror("Error", "Select a contact")
+        return
 
+    index = selected[0]
+    new_phone = phone_entry.get()
+
+    if not is_valid_phone(new_phone):
+        messagebox.showerror("Error", "Invalid phone")
+        return
+
+    contacts[index].phone = new_phone
+    save_contacts()
+    update_listbox()
+    messagebox.showinfo("Success", "Updated")
+
+def update_listbox():
+    listbox.delete(0, tk.END)
     for c in contacts:
-        if c.name.lower() == name.lower():
-            new_phone = input("Enter new phone: ").strip()
+        listbox.insert(tk.END, f"{c.name} - {c.phone}")
 
-            if not is_valid_phone(new_phone):
-                print("Invalid phone number.\n")
-                return
-
-            c.phone = new_phone
-            save_contacts()
-            print("Contact updated successfully!\n")
-            return
-
-    print("Contact not found.\n")
+def clear_fields():
+    name_entry.delete(0, tk.END)
+    phone_entry.delete(0, tk.END)
 
 
-# ---------- Main Menu ----------
-def main():
-    load_contacts()
+# ---------- GUI Setup ----------
+root = tk.Tk()
+root.title("Contact Manager")
+root.geometry("400x500")
 
-    while True:
-        print("===== CONTACT MENU =====")
-        print("1. Add Contact")
-        print("2. View Contacts")
-        print("3. Search Contact")
-        print("4. Delete Contact")
-        print("5. Update Contact")
-        print("6. Exit")
+# Labels & Entries
+tk.Label(root, text="Name").pack()
+name_entry = tk.Entry(root)
+name_entry.pack()
 
-        choice = input("Enter choice: ").strip()
+tk.Label(root, text="Phone").pack()
+phone_entry = tk.Entry(root)
+phone_entry.pack()
 
-        if choice == "1":
-            add_contact()
-        elif choice == "2":
-            view_contacts()
-        elif choice == "3":
-            search_contact()
-        elif choice == "4":
-            delete_contact()
-        elif choice == "5":
-            update_contact()
-        elif choice == "6":
-            print("Program closed.")
-            break
-        else:
-            print("Invalid choice.\n")
+# Buttons
+tk.Button(root, text="Add", command=add_contact).pack(pady=5)
+tk.Button(root, text="View", command=view_contacts).pack(pady=5)
+tk.Button(root, text="Search", command=search_contact).pack(pady=5)
+tk.Button(root, text="Delete", command=delete_contact).pack(pady=5)
+tk.Button(root, text="Update", command=update_contact).pack(pady=5)
 
+# Listbox
+listbox = tk.Listbox(root, width=40)
+listbox.pack(pady=10)
 
-# ---------- Run Program ----------
-if __name__ == "__main__":
-    main()
+# Load data and start
+load_contacts()
+update_listbox()
+
+root.mainloop()
