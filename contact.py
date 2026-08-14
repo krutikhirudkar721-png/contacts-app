@@ -145,4 +145,4 @@ listbox.pack(pady=10)
 load_contacts()
 update_listbox()
 
-root.mainloop()
+root.mainloop()
