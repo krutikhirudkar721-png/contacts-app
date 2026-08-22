@@ -9,7 +9,6 @@ class Contact:
     def __init__(self, name, phone):
         self.name = name.strip()
         self.phone = phone.strip()
-
     def to_dict(self):
         return {"name": self.name, "phone": self.phone}
 
