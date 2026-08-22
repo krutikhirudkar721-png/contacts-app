@@ -13,6 +13,7 @@ The Contact Management System is a Python-based application that allows users to
 🛠️ Technologies Used
 
 * Python
+  
 Object-Oriented Programming (OOP)
 JSON
 Lists, Functions, and File Handling
