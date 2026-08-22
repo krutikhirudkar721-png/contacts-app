@@ -1,2 +1,2 @@
 * I create my first project in python language as collage assignment
-* 
+  
